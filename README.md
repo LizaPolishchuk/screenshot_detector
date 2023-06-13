@@ -1,15 +1,12 @@
-# screenshot_detector
+# Screenshot Detector
 
-A new Flutter project.
+A library for detecting when a user has taken a screenshot for Android and IOS.
 
 ## Getting Started
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+This project uses native IOS and Android >14 code from the official documentation to check if the
+user has taken a screenshot. Android versions below 14 use a contentresolver to check if a
+screenshot has been taken, so you need to grant read storage permission to work correctly.
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Usage
 
