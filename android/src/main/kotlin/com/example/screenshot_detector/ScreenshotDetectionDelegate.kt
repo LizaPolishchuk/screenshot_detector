@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import java.lang.ref.WeakReference
 
+
 class ScreenshotDetectionDelegate(
     private val activityReference: WeakReference<Activity>,
     private val listener: ScreenshotDetectionListener
@@ -34,19 +35,6 @@ class ScreenshotDetectionDelegate(
         activity: Activity,
         listener: ScreenshotDetectionListener
     ) : this(WeakReference(activity), listener)
-
-    @Suppress("unused")
-    constructor(
-        activity: Activity,
-        onScreenCaptured: (path: String) -> Unit
-    ) : this(
-        WeakReference(activity),
-        object : ScreenshotDetectionListener {
-            override fun onScreenCaptured(path: String) {
-                onScreenCaptured(path)
-            }
-        }
-    )
 
     @FlowPreview
     @ExperimentalCoroutinesApi
@@ -113,12 +101,12 @@ class ScreenshotDetectionDelegate(
                 lowercasePath?.contains("screenshot") == true
     }
 
-    @Suppress("DEPRECATION")
-    private fun getPublicScreenshotDirectoryName() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS).name
-    } else null
+    private fun getPublicScreenshotDirectoryName() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_SCREENSHOTS).name
+        } else null
 
-    @Suppress("DEPRECATION")
+
     private fun getFilePathFromContentResolver(context: Context, uri: Uri): String? {
         try {
             context.contentResolver.query(
@@ -143,10 +131,13 @@ class ScreenshotDetectionDelegate(
     }
 
     private fun isReadExternalStoragePermissionGranted(): Boolean {
+        val permission: String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
+
         return activityReference.get()?.let { activity ->
             ContextCompat.checkSelfPermission(
                 activity,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                permission
             ) == PackageManager.PERMISSION_GRANTED
         } ?: run {
             false

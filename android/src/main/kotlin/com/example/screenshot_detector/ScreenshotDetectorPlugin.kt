@@ -61,8 +61,6 @@ class ScreenshotDetectorPlugin : FlutterPlugin, MethodCallHandler, ActivityAware
     override fun onDetachedFromActivity() {}
 
     override fun onScreenCaptured(path: String) {
-        print("onScreenCaptured 56")
-        Log.d("tag", "onScreenCaptured 56")
         channel.invokeMethod("screenCaptured", path)
     }
 
